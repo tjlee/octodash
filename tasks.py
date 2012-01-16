@@ -16,6 +16,9 @@ def task_collection():
 def get_task(latest_count=10):
     try:
         cursor = task_collection().find(limit=latest_count, sort=[('date', pymongo.DESCENDING)])
-        return [el for el in cursor]
+        result = [el for el in cursor]
+        for res in result:
+            del res['_id']
+        return result
     except Exception as ex:
         print ex
