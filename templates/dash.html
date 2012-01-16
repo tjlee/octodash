@@ -6,14 +6,25 @@
     <script type=text/javascript src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
     <!--<script type=text/javascript>window.jQuery || document.write('<script src="{{ url_for('static', filename='jquery.js') }}">\x3C/script>')</script>-->
     <script type=text/javascript>
+        var colors = {'FINISHED':'green',
+                      'STARTED': 'yellow',
+                      'FAILED': 'red',
+                      'INVOKED': 'blud'};
+
         function wall(){
             $.get('/tasks/', {},
                   function(data){
                       console.log(data);
                       var result = data['result'];
-                      var text = '<ul>';
-                      for (var res in result)
-                          text += '<li>' + JSON.stringify(result[res]) + '</li>';
+                      text = '<ul>';
+                      for (var res in result) {
+                          var task = result[res];
+                          var status = task['status'];
+                          var color = colors[status];
+                          if (task['type'] == 'buzzoola.worker.tasks.tasks.convert_video')
+                              text += '<img src="/static/ffmpeg.png" style="height: 30px; width: 60px;"/>';
+                          text += '<li style="color: ' + color +  ';">' + task.type + ' : ' + task.args + '</li>';
+                      }
                       text += '</ul>';
                       $('#tasks').html(text);
                       setTimeout("wall()",5000);
@@ -33,7 +44,7 @@
          <!--</li>-->
         <!--{% endfor %}-->
     <!--</ul>-->
-    <div id='tasks'>no data</div>
+    <div id='tasks' style="color: blue;">no data</div>
 
 
 </body>
